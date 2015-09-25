@@ -13,7 +13,9 @@
     media="only screen and (max-device-width: 480px)" >
   <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
   <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
-  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
 
   
   <!-- Grab CDN jQuery, fall back to local if offline -->
@@ -46,25 +48,26 @@
     <h2>Introduction</h2>
   </hgroup>
   <article data-timings="">
-    <p>###Context for Data Analysis
-The White House recently released a report on the state of College Education in the U.S.
-Data collected from 7804 colleges offering a 4 year degree was analyzed along the following dimensions, 6, 8, and 10 years after completion of degree.<br>
-1. Academics
-2. cost of education
-3. Earnings<br>
-4. Debt</p>
+    <h3>Context for Data Analysis</h3>
 
-<p>###Sources of Data and reports on findings 
-1. Policy paper: <a href="http://www.whitehouse.gov/college/policy.html">www.whitehouse.gov/college/policy.html</a><br>
-2. Technical paper: <a href="http://www.whitehouse.gov/college/technical.html">www.whitehouse.gov/college/technical.html</a><br>
-3. Raw Data:  <a href="http://www.collegeboard.edu/collegeScoreCard">www.collegeboard.edu/collegeScoreCard</a> (7804 rows, 109 variables)</p>
+<p>The White House recently released a report on the state of College Education in the U.S.
+Data collected from 7804 colleges offering a 4 year degree was analyzed along the following four dimensions, six, eight, and ten years after completion of degree.<br>
+1. Academics  2. cost of education  3. Earnings   4. Debt  </p>
 
-<p>###This report<br>
-1.  Subset analyzing only 6 year data.<br>
-2.  Only along dimensions of Earnings and Debt
-3.  Processed raw data to extract fields of interest (7804 rows, 12 variables).<br>
-4.  Imputed missing values with median value of column.<br>
-5.  Data file for analysis (and on github): collegeEarningsData.csv</p>
+<h4>Sources of Data</h4>
+
+<ol>
+<li> <a href="https://collegescorecard.ed.gov">https://collegescorecard.ed.gov</a></li>
+<li>  <a href="http://www.collegeboard.edu/collegeScoreCard">www.collegeboard.edu/collegeScoreCard</a> (7804 rows, 109 variables)</li>
+</ol>
+
+<h4>This report</h4>
+
+<ol>
+<li> Subset analyzing only 6 year data along dimensions of earnings and debt<br></li>
+<li> Imputed missing values with median value of column (may introduce some bias)<br></li>
+<li> Data file for analysis (and on github): collegeEarningsData.csv</li>
+</ol>
 
   </article>
   <!-- Presenter Notes -->
@@ -72,20 +75,58 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 2: Earnings of Top and Bottom 25 Colleges</h2>
+    <h2>Data extraction and imputation</h2>
   </hgroup>
   <article data-timings="">
-    <p>###Top 25 Colleges</p>
+    <h4>Data Extraction and cleansing</h4>
 
-<p>###Bottom 25 Colleges</p>
+<ol>
+<li>Raw data obtained from the web site has 7804 rows and 109 columns.<br></li>
+<li>There are many values that are either NULL or marked as &quot;Privacy Suppressed&quot; indicating that the college did not want to disclose that piece of data.</li>
+<li> Only a subset of the data was extracted (7804 rows, 12 columns) because that is the basis for our analysis.</li>
+</ol>
 
-<h2>Shiny server code to display earnings data</h2>
+<h4>Data imputation</h4>
 
-<pre><code class="r">    output$school_table &lt;- renderTable({ 
-      var &lt;- switch(input$var, 
-                     &quot;Top 20 colleges for earnings&quot; = mean_earnings_display_top25,
-                     &quot;Bottom 20 Colleges for earnings&quot; = mean_earnings_display_bottom25)
-      })
+<ol>
+<li> All the values marked as NULL or &quot;Privacy Suppressed&quot; were replaced with NA</li>
+<li> All the NA values were replaced with the median value of that column. This may introduce some bias in the analysis.</li>
+</ol>
+
+<h4>Data Set used for analysis</h4>
+
+<ol>
+<li> earnings.csv (7804 rows, 12 columns)</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Set up ui.R: Only Pseudocode displayed due to space limitations</h2>
+  </hgroup>
+  <article data-timings="">
+    <h4>Set up Help text within sidebarPanel</h4>
+
+<pre><code class="r">   helpText(&quot;...Text explaining how application should be used...&quot;) 
+</code></pre>
+
+<h4>Set up selectInput box within sidebarPanel with input choices and default choice</h4>
+
+<pre><code class="r">selectInput(&quot;var&quot;, 
+            label = &quot;Choose data to display&quot;,
+            choices = list(&quot;...list of 5 choices goes here...&quot;),
+                  selected = 1)),
+</code></pre>
+
+<h4>Set up mainPanel within sideBarLayout</h4>
+
+<pre><code class="r">   mainPanel(
+      h3(textOutput(&quot;text1&quot;),align = &quot;center&quot;),
+      tableOutput(&quot;school_table&quot;)
+    )
 </code></pre>
 
   </article>
@@ -94,42 +135,22 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 3: Percent Graduates earning more than $25K</h2>
+    <h2>Set up server.R: Only Pseudocode displayed due to space limitations</h2>
   </hgroup>
   <article data-timings="">
-    <p>###Top 25 Colleges</p>
+    <h4>Set up data tables for each input choice outside of ShinyServer code</h4>
 
-<p>##Some Code</p>
+<ol>
+<li> Earnings (top and bottom 25 colleges)</li>
+<li> Percent earning more than $25K ((top and bottom 25 colleges)</li>
+<li> Median debt for Low, Medium and High Income families</li>
+</ol>
 
-<p>###Bottom 25 Colleges</p>
-
-<h2>Shiny server code to display data</h2>
+<h4>Shiny server code that will &#39;reactively&#39; display data based on input selection</h4>
 
 <pre><code class="r">    output$school_table &lt;- renderTable({ 
       var &lt;- switch(input$var, 
-                     &quot;% students earning &gt; $25K among top 25 Colleges&quot; = gt_25k_earnings_display_top25,
-                     &quot;% students earning &gt; $25K among bottom 25 Colleges&quot; = gt_25k_earnings_display_bottom25)    })
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="class" id="id" style="background:;">
-  <hgroup>
-    <h2>Slide 4: Median Debt of Households by Income levels</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>###Income Level Classification<br>
-1.  Low Income: Median Earnings per year of $0-$30,000
-2.  Middle Income: Median Earnings per year of $30,001-$75,000
-3.  High Income: Median Earnings per year greater than $75,000</p>
-
-<h2>Shiny server code to display data</h2>
-
-<pre><code class="r">    output$school_table &lt;- renderTable({ 
-      var &lt;- switch(input$var, 
-                     &quot;Average Debt among Low, Medium and High Income families&quot; = debt_data)
+                     &quot;...choice of input here...&quot; = data_table_to_display)
        })
 </code></pre>
 
@@ -139,22 +160,59 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 5: Conclusions</h2>
+    <h2>Quiz and Conclusions</h2>
   </hgroup>
   <article data-timings="">
-    <h3>Professional Degree colleges pay higher</h3>
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <article data-timings="">
+    
+<div class="quiz quiz-single well ">
+  <p>How many colleges were used in the analysis?</p>
 
 <ol>
-<li>24 out of 25 top colleges had earnings higher than $75,000 per year</li>
-<li>Range of earnings for bottom 25 colleges was $9000 - $13,000</li>
+<li> 109</li>
+<li> <em>7804</em></li>
+<li> 12</li>
+<li> A lot</li>
 </ol>
 
-<h3>There are many who are making less than $25,000 6 years after graduation</h3>
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>This is displayed in the application as well as in this presentation</p>
 
-<h3>Average debt levels seem to be about the same regardles sof income levels</h3>
+</div>
+<div class="quiz-explanation">
+  <p>Data from 7804 colleges across the U.S. was used in the analysis.</p>
 
-<h3>Fatal flaw: Qualitative aspects of education ignored.</h3>
+<h4>Conclusions</h4>
 
+<ol>
+<li> All of the 25 top colleges had earnings higher than $75K per year</li>
+<li> Range of annual earnings for bottom 25 colleges was $7K-$11K</li>
+<li> There are many who are making less than $25K per year,  6 years after graduation</li>
+<li> Average debt levels seem to be about the same regardles sof income levels implying financial assistance programs pay for most of college tution costs.</li>
+</ol>
+
+<h4>Fatal flaw: Qualitative aspects of education ignored. One of the pitfalls of drawing conclusions based on data alone.</h4>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -171,26 +229,38 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Slide 2: Earnings of Top and Bottom 25 Colleges'>
+        data-slide=2 title='Data extraction and imputation'>
          2
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Slide 3: Percent Graduates earning more than $25K'>
+        data-slide=3 title='Set up ui.R: Only Pseudocode displayed due to space limitations'>
          3
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title='Slide 4: Median Debt of Households by Income levels'>
+        data-slide=4 title='Set up server.R: Only Pseudocode displayed due to space limitations'>
          4
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='Slide 5: Conclusions'>
+        data-slide=5 title='Quiz and Conclusions'>
          5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='NA'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='NA'>
+         7
       </a>
     </li>
   </ul>
@@ -202,6 +272,18 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
   <![endif]-->
 </body>
   <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+<script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+
+  <script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
   
   <!-- LOAD HIGHLIGHTER JS FILES -->
   <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
