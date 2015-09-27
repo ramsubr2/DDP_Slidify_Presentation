@@ -48,14 +48,12 @@ Data collected from 7804 colleges offering a 4 year degree was analyzed along th
 ## Set up ui.R: Only Pseudocode displayed due to space limitations
 
 #### Set up Help text within sidebarPanel
-
-```r
+```{r message=FALSE, eval=FALSE}
    helpText("...Text explaining how application should be used...") 
 ```
 
 #### Set up selectInput box within sidebarPanel with input choices and default choice
-
-```r
+```{r message=FALSE, eval=FALSE}
 selectInput("var", 
             label = "Choose data to display",
             choices = list("...list of 5 choices goes here..."),
@@ -63,8 +61,8 @@ selectInput("var",
 ```
 
 #### Set up mainPanel within sideBarLayout
-
-```r
+```{r message=FALSE, eval=FALSE}
+   
    mainPanel(
       h3(textOutput("text1"),align = "center"),
       tableOutput("school_table")
@@ -81,8 +79,7 @@ selectInput("var",
 3.  Median debt for Low, Medium and High Income families
 
 #### Shiny server code that will 'reactively' display data based on input selection
-
-```r
+```{r message=FALSE, eval=FALSE}
     output$school_table <- renderTable({ 
       var <- switch(input$var, 
                      "...choice of input here..." = data_table_to_display)
@@ -115,3 +112,5 @@ How many colleges were used in the analysis?
 4.  Average debt levels seem to be about the same regardles sof income levels implying financial assistance programs pay for most of college tution costs.
 
 #### Fatal flaw: Qualitative aspects of education ignored. One of the pitfalls of drawing conclusions based on data alone.
+
+--- .class #id

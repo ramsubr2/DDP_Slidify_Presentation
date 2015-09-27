@@ -112,5 +112,3 @@ How many colleges were used in the analysis?
 4.  Average debt levels seem to be about the same regardles sof income levels implying financial assistance programs pay for most of college tution costs.
 
 #### Fatal flaw: Qualitative aspects of education ignored. One of the pitfalls of drawing conclusions based on data alone.
-
---- .class #id
